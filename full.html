@@ -1,0 +1,996 @@
+<!DOCTYPE html>
+<head>
+    <meta charset="utf-8">
+    <link rel="stylesheet" type="text/css" href="./codehilite.css">
+    <style>
+    body {
+        font-family:Avenir, sans-serif;
+    }
+    article {
+        max-width:750px;
+        margin:auto;
+    }
+    </style>
+    <title>Objective-C and Swift equivalencies</title>
+</head>
+<body>
+    <article>
+<h1>Objective-C and Swift equivalencies</h1><p>Swift has encouraged many developers to consider Cocoa and Cocoa Touch development, but the vast majority of resources are still written in Objective-C. This post summarises many common patterns in both languages to make it easier for developers reading Objective-C code to write Swift code (or vice versa!).</p>
+<div class="toc">
+<ul>
+<li><a href="#basics">Basics</a><ul>
+<li><a href="#hello-world">Hello, world!</a></li>
+<li><a href="#declarations">Declarations</a></li>
+<li><a href="#format-strings">Format strings</a></li>
+<li><a href="#arrays">Arrays</a></li>
+<li><a href="#dictionaries">Dictionaries</a></li>
+<li><a href="#numeric-types">Numeric types</a></li>
+<li><a href="#if-statements">If statements</a></li>
+<li><a href="#loops">Loops</a></li>
+<li><a href="#dictionary-iteration">Dictionary iteration</a></li>
+<li><a href="#enumerations">Enumerations</a></li>
+</ul>
+</li>
+<li><a href="#functions-methods-and-classes">Functions, methods and classes</a><ul>
+<li><a href="#class-declaration">Class declaration</a></li>
+<li><a href="#properties">Properties</a></li>
+<li><a href="#instance-methods">Instance methods</a><ul>
+<li><a href="#declaration-and-implementation">Declaration and implementation</a></li>
+<li><a href="#calling-methods">Calling methods</a></li>
+</ul>
+</li>
+<li><a href="#class-methods">Class methods</a></li>
+<li><a href="#initializers">Initializers</a></li>
+<li><a href="#deinitializers">Deinitializers</a></li>
+<li><a href="#instance-declarations">Instance declarations</a></li>
+<li><a href="#protocols">Protocols</a></li>
+<li><a href="#extensions">Extensions</a></li>
+<li><a href="#private-methods-and-properties">Private methods and properties</a></li>
+<li><a href="#interface-builder">Interface Builder</a></li>
+<li><a href="#getters-and-setters">Getters and setters</a></li>
+</ul>
+</li>
+<li><a href="#blocks-and-functional-patterns">Blocks and functional patterns</a><ul>
+<li><a href="#no-parameters-no-return-value">No parameters, no return value</a></li>
+<li><a href="#parameters-and-return-value">Parameters and return value</a></li>
+<li><a href="#typealiastypedef">Typealias/Typedef</a></li>
+<li><a href="#sorting">Sorting</a></li>
+</ul>
+</li>
+<li><a href="#imports-and-project-management">Imports and project management</a></li>
+</ul>
+</div>
+<h2 id="basics">Basics</h2>
+<h3 id="hello-world">Hello, world!</h3>
+<p><strong>Swift</strong></p>
+<div class="codehilite"><pre><span class="bp">println</span><span class="p">(</span><span class="s">&quot;Hello, world!&quot;</span><span class="p">)</span>
+</pre></div>
+
+
+<p><strong>Objective-C</strong></p>
+<div class="codehilite"><pre><span class="n">NSLog</span><span class="p">(</span><span class="s">@&quot;Hello, world&quot;</span><span class="p">);</span>
+</pre></div>
+
+
+<ul>
+<li><code>NSLog</code> is also available in Swift</li>
+<li>Objective-C lines must end in a semi-colon</li>
+<li>In Objective-C you have to prefix strings (<code>NSString</code>s, the Cocoa string class) with an <code>@</code></li>
+</ul>
+<h3 id="declarations">Declarations</h3>
+<p><strong>Swift</strong></p>
+<div class="codehilite"><pre><span class="kd">var</span> <span class="nv">x</span> <span class="p">=</span> <span class="mi">5</span>
+<span class="kd">let</span> <span class="nv">constantString</span> <span class="p">=</span> <span class="s">&quot;This string is immutable&quot;</span>
+<span class="kd">var</span> <span class="nv">mutableString</span> <span class="p">=</span> <span class="s">&quot;This string is mutable&quot;</span>
+</pre></div>
+
+
+<p><strong>Objective-C</strong></p>
+<div class="codehilite"><pre><span class="kt">int</span> <span class="n">x</span> <span class="o">=</span> <span class="mi">5</span><span class="p">;</span>
+<span class="bp">NSString</span> <span class="o">*</span> <span class="n">constantString</span> <span class="o">=</span> <span class="s">@&quot;This string is immutable&quot;</span><span class="p">;</span>
+<span class="bp">NSMutableString</span> <span class="o">*</span> <span class="n">mutableString</span> <span class="o">=</span> <span class="p">[</span><span class="bp">NSMutableString</span> <span class="nl">stringWithString</span><span class="p">:</span><span class="s">@&quot;This string is mutable&quot;</span><span class="p">];</span>
+</pre></div>
+
+
+<ul>
+<li>You have to declare variables with their type in Objective-C, but in Swift it is usually optional</li>
+<li>Constant variables are declared with <code>let</code> in Swift and mutable variables are declared with <code>var</code></li>
+<li>All classes are declared as C pointers in Objective-C (in simple terms, just put an asterisk after the class name, but you don't need to do this for standard C types like <code>int</code> or <code>double</code>)</li>
+<li>Mutable and immutable strings are separate classes in Objective-C</li>
+</ul>
+<h3 id="format-strings">Format strings</h3>
+<p><strong>Swift</strong></p>
+<div class="codehilite"><pre><span class="kd">let</span> <span class="nv">str</span> <span class="p">=</span> <span class="s">&quot;Hello </span><span class="si">\(</span><span class="n">name</span><span class="si">)</span><span class="s">&quot;</span>
+</pre></div>
+
+
+<p><strong>Objective-C</strong></p>
+<div class="codehilite"><pre><span class="bp">NSString</span> <span class="o">*</span> <span class="n">str</span> <span class="o">=</span> <span class="p">[</span><span class="bp">NSString</span> <span class="nl">stringWithFormat</span><span class="p">:</span><span class="s">@&quot;Hello %@&quot;</span><span class="p">,</span> <span class="n">name</span><span class="p">];</span>
+</pre></div>
+
+
+<ul>
+<li>The <code>\()</code> allows you to place arbitrary values in Swift strings</li>
+<li>You have to use C style format strings in Objective-C. Apple has a list of all the <a href="https://developer.apple.com/library/ios/documentation/Cocoa/Conceptual/Strings/Articles/formatSpecifiers.html#//apple_ref/doc/uid/TP40004265-SW1"><code>NSString</code> format specifies</a></li>
+</ul>
+<h3 id="arrays">Arrays</h3>
+<p><strong>Swift</strong></p>
+<div class="codehilite"><pre><span class="kd">let</span> <span class="nv">immutableArray</span><span class="p">:</span> <span class="p">[</span><span class="nb">Int</span><span class="p">]</span> <span class="p">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">]</span>
+<span class="kd">var</span> <span class="nv">mutableArray</span> <span class="p">=</span> <span class="p">[</span><span class="s">&quot;first&quot;</span><span class="p">,</span> <span class="s">&quot;second&quot;</span><span class="p">,</span> <span class="s">&quot;third&quot;</span><span class="p">]</span>
+<span class="n">mutableArray</span><span class="p">.</span><span class="n">append</span><span class="p">(</span><span class="s">&quot;fourth&quot;</span><span class="p">)</span>
+</pre></div>
+
+
+<p><strong>Objective-C</strong></p>
+<div class="codehilite"><pre><span class="bp">NSArray</span> <span class="o">*</span> <span class="n">immutableArray</span> <span class="o">=</span> <span class="l">@[</span><span class="mi">@0</span><span class="p">,</span> <span class="mi">@1</span><span class="p">,</span> <span class="mi">@2</span><span class="p">,</span> <span class="mi">@3</span><span class="l">]</span><span class="p">;</span>
+<span class="bp">NSMutableArray</span> <span class="o">*</span> <span class="n">mutableArray</span> <span class="o">=</span> <span class="p">[</span><span class="bp">NSMutableArray</span> <span class="nl">arrayWithArray</span><span class="p">:[</span><span class="s">@&quot;first&quot;</span><span class="p">,</span> <span class="s">@&quot;second&quot;</span><span class="p">,</span> <span class="s">@&quot;third&quot;</span><span class="p">]];</span>
+<span class="p">[</span><span class="n">mutableArray</span> <span class="nl">addObject</span><span class="p">:</span><span class="s">@&quot;fourth&quot;</span><span class="p">];</span>
+</pre></div>
+
+
+<ul>
+<li>Array types are inferred in Swift - you don't need them</li>
+<li>Immutable arrays are declared with <code>let</code> and mutable arrays with <code>var</code> in Swift</li>
+<li>You have to prefix the array declaration with @ in Objective-C</li>
+<li>Objective-C uses subclasses of <code>NSArray</code>, which supports storing anything that is a subclass of <code>NSObject</code>. Raw numbers (<code>int</code>, <code>double</code>, etc) are not subclasses of <code>NSObject</code>, so we have to use the <code>@</code> shortcut. Writing <code>@123</code> is the same as <code>[NSNumber numberWithInt:123]</code></li>
+</ul>
+<h3 id="dictionaries">Dictionaries</h3>
+<p><strong>Swift</strong></p>
+<div class="codehilite"><pre><span class="kd">let</span> <span class="nv">immutableDictionary</span> <span class="p">=</span> <span class="p">[</span><span class="s">&quot;key&quot;</span><span class="p">:</span><span class="s">&quot;value&quot;</span><span class="p">,</span> <span class="s">&quot;key2&quot;</span><span class="p">:</span><span class="s">&quot;value2&quot;</span><span class="p">]</span>
+<span class="kd">var</span> <span class="nv">mutableDictionary</span> <span class="p">=</span> <span class="p">[</span><span class="s">&quot;key&quot;</span><span class="p">:</span><span class="s">&quot;value&quot;</span><span class="p">,</span> <span class="s">&quot;key2&quot;</span><span class="p">:</span><span class="s">&quot;value2&quot;</span><span class="p">]</span>
+<span class="n">mutableDictionary</span><span class="p">[</span><span class="s">&quot;key&quot;</span><span class="p">]</span> <span class="p">=</span> <span class="s">&quot;I can change this&quot;</span>
+</pre></div>
+
+
+<p><strong>Objective-C</strong></p>
+<div class="codehilite"><pre><span class="bp">NSDictionary</span> <span class="o">*</span> <span class="n">immutableDictionary</span> <span class="o">=</span> <span class="l">@{</span><span class="s">@&quot;key&quot;</span><span class="o">:</span><span class="s">@&quot;value&quot;</span><span class="p">,</span> <span class="s">@&quot;key2&quot;</span><span class="p">,</span> <span class="s">@&quot;value2&quot;</span><span class="l">}</span><span class="p">;</span>
+<span class="bp">NSMutableDictionary</span> <span class="o">*</span> <span class="n">mutableDictionary</span> <span class="o">=</span> <span class="p">[</span><span class="bp">NSMutableDictionary</span> <span class="nl">dictionaryWithDictionary</span><span class="p">:</span><span class="l">@{</span><span class="s">@&quot;key&quot;</span><span class="o">:</span><span class="s">@&quot;value&quot;</span><span class="p">,</span> <span class="s">@&quot;key2&quot;</span><span class="p">,</span> <span class="s">@&quot;value2&quot;</span><span class="l">}</span><span class="p">];</span>
+<span class="n">mutableDictionary</span><span class="p">[</span><span class="s">@&quot;key&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s">@&quot;I can change this&quot;</span><span class="p">;</span>
+</pre></div>
+
+
+<ul>
+<li>Again, you have to use the @ prefix in Objective-C for the declaration</li>
+<li><code>NSDictionary</code> and <code>NSMutableDictionary</code> support using any <code>NSObject</code> type as the key or value, but Swift dictionaries require that all the keys have the same type and all the values have the same type (these two types can be different)</li>
+</ul>
+<h3 id="numeric-types">Numeric types</h3>
+<table>
+<thead>
+<tr>
+<th>Objective-C</th>
+<th>Swift</th>
+<th>Size</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>int</td>
+<td>Int32</td>
+<td>32 bits</td>
+<td>Signed</td>
+</tr>
+<tr>
+<td>int64_t</td>
+<td>Int64</td>
+<td>64 bits</td>
+<td>Signed</td>
+</tr>
+<tr>
+<td>uint</td>
+<td>UInt32</td>
+<td>32 bits</td>
+<td>Unsigned</td>
+</tr>
+<tr>
+<td>uint64_t</td>
+<td>UInt64</td>
+<td>64 bits</td>
+<td>Unsigned</td>
+</tr>
+<tr>
+<td>NSInteger</td>
+<td>Int</td>
+<td>Platform word size</td>
+<td>Signed</td>
+</tr>
+<tr>
+<td>NSUInteger</td>
+<td>UInt</td>
+<td>Platform word size</td>
+<td>Unsigned</td>
+</tr>
+<tr>
+<td>float</td>
+<td>Float</td>
+<td>32 bits</td>
+<td>At least 6 decimal digits</td>
+</tr>
+<tr>
+<td>double</td>
+<td>Double</td>
+<td>64 bits</td>
+<td>At least 15 decimal digits</td>
+</tr>
+<tr>
+<td>CGFloat</td>
+<td>CGFloat</td>
+<td>Platform word size</td>
+<td></td>
+</tr>
+<tr>
+<td>BOOL</td>
+<td>Bool</td>
+<td>-</td>
+<td><code>TRUE</code> and <code>FALSE</code> in Objective-C, <code>True</code> and <code>False in Swift</code></td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li>If you are interacting with Cocoa APIs, you should generally use <code>NSInteger</code>/<code>Int</code> and <code>NSUInteger</code>/<code>UInt</code> instead of the sized integer types</li>
+<li>When using Cocoa APIs that deal with graphics (e.g. Quartz, UIKit) you should generally use <code>CGFloat</code></li>
+</ul>
+<h3 id="if-statements">If statements</h3>
+<p><strong>Swift</strong></p>
+<div class="codehilite"><pre><span class="k">if</span> <span class="n">somethingIsTrue</span> <span class="p">{</span>
+    <span class="p">...</span>
+<span class="p">}</span>
+</pre></div>
+
+
+<p><strong>Objective-C</strong></p>
+<div class="codehilite"><pre><span class="k">if</span> <span class="p">(</span><span class="n">somethingIsTrue</span><span class="p">)</span> <span class="p">{</span>
+    <span class="p">...</span>
+<span class="p">}</span>
+</pre></div>
+
+
+<ul>
+<li>Round brackets are optional in Swift if statements</li>
+</ul>
+<h3 id="loops">Loops</h3>
+<p><strong>Swift</strong></p>
+<div class="codehilite"><pre><span class="k">for</span> <span class="n">i</span> <span class="k">in</span> <span class="mf">1.</span><span class="p">..</span><span class="mi">5</span> <span class="p">{</span>
+    <span class="c1">//This will execute for 1, 2, 3, 4, 5</span>
+<span class="p">}</span>
+
+<span class="k">for</span> <span class="n">i</span> <span class="k">in</span> <span class="mf">0.</span><span class="p">.&lt;</span><span class="mi">5</span> <span class="p">{</span>
+    <span class="c1">//This will execute for 0, 1, 2, 3, 4</span>
+<span class="p">}</span>
+
+<span class="k">for</span> <span class="n">str</span> <span class="k">in</span> <span class="n">array</span> <span class="p">{</span>
+    <span class="c1">//This will execute for each item in the array</span>
+<span class="p">}</span>
+</pre></div>
+
+
+<p><strong>Objective-C</strong></p>
+<div class="codehilite"><pre><span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;=</span> <span class="mi">5</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+    <span class="c1">//This will execute for 1, 2, 3, 4, 5</span>
+<span class="p">}</span>
+
+<span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="mi">5</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+    <span class="c1">//This will execute for 0, 1, 2, 3, 4</span>
+<span class="p">}</span>
+
+<span class="k">for</span> <span class="p">(</span><span class="bp">NSString</span> <span class="o">*</span> <span class="n">str</span> <span class="k">in</span> <span class="n">array</span><span class="p">)</span> <span class="p">{</span>
+    <span class="c1">//This will execute for each item in the array</span>
+    <span class="c1">//We have to assume that all of the items are strings</span>
+    <span class="c1">//If you have multiple types in one array you can use id as the type</span>
+<span class="p">}</span>
+</pre></div>
+
+
+<ul>
+<li>Swift loops are generally simpler than their Objective-C equivalents</li>
+<li>Types are optional in Swift loop declarations</li>
+</ul>
+<h3 id="dictionary-iteration">Dictionary iteration</h3>
+<p><strong>Swift</strong></p>
+<div class="codehilite"><pre><span class="k">for</span> <span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span> <span class="k">in</span> <span class="n">dict</span> <span class="p">{</span>
+    <span class="p">...</span>
+<span class="p">}</span>
+</pre></div>
+
+
+<p><strong>Objective-C</strong></p>
+<div class="codehilite"><pre><span class="k">for</span> <span class="p">(</span><span class="kt">id</span> <span class="n">key</span> <span class="k">in</span> <span class="n">dict</span><span class="p">.</span><span class="n">allKeys</span><span class="p">)</span> <span class="p">{</span>
+    <span class="kt">id</span> <span class="n">value</span> <span class="o">=</span> <span class="n">dict</span><span class="p">[</span><span class="n">key</span><span class="p">];</span>
+    <span class="p">...</span>
+<span class="p">}</span>
+</pre></div>
+
+
+<h3 id="enumerations">Enumerations</h3>
+<p><strong>Swift</strong></p>
+<div class="codehilite"><pre><span class="kd">enum</span> <span class="nc">Planet</span> <span class="p">{</span>
+    <span class="k">case</span> <span class="n">Mercury</span><span class="p">,</span> <span class="n">Venus</span><span class="p">,</span> <span class="n">Earth</span><span class="p">,</span> <span class="n">Mars</span><span class="p">,</span> <span class="n">Jupiter</span><span class="p">,</span> <span class="n">Saturn</span><span class="p">,</span> <span class="n">Uranus</span><span class="p">,</span> <span class="n">Neptune</span>
+<span class="p">}</span>
+
+<span class="kd">let</span> <span class="nv">myPlanet</span> <span class="p">=</span> <span class="n">Planet</span><span class="p">.</span><span class="n">Earth</span>
+</pre></div>
+
+
+<p><strong>Objective-C</strong></p>
+<div class="codehilite"><pre><span class="n">tyepdef</span> <span class="nf">NS_ENUM</span><span class="p">(</span><span class="n">NSUInteger</span><span class="p">,</span> <span class="n">Planet</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">PlanetMercury</span><span class="p">,</span>
+    <span class="n">PlanetVenus</span><span class="p">,</span>
+    <span class="n">PlanetEarth</span><span class="p">,</span>
+    <span class="n">PlanetMars</span><span class="p">,</span>
+    <span class="n">PlanetJupiter</span><span class="p">,</span>
+    <span class="n">PlanetSaturn</span><span class="p">,</span>
+    <span class="n">PlanetUranus</span><span class="p">,</span>
+    <span class="n">PlanetNepture</span>
+<span class="p">}</span>
+
+<span class="n">Planet</span> <span class="n">myPlanet</span> <span class="o">=</span> <span class="n">PlanetEarth</span><span class="p">;</span>
+</pre></div>
+
+
+<ul>
+<li>You use dot-syntax to access enum values in Swift</li>
+<li>You can add methods to enums in Swift</li>
+<li>You use the <code>NS_ENUM</code> macro to declare enums in Objective-C. Declaring them in this style means that you can use them like <code>Planet.Earth</code> in Swift (regular C enums don't support this)</li>
+</ul>
+<h2 id="functions-methods-and-classes">Functions, methods and classes</h2>
+<h3 id="class-declaration">Class declaration</h3>
+<p><strong>Swift</strong></p>
+<div class="codehilite"><pre><span class="c1">//ABaseClass.swift</span>
+<span class="kd">class</span> <span class="nc">ABaseClass</span> <span class="p">{</span>
+    <span class="c1">//Declaration of properties</span>
+    <span class="c1">//Declaration and implementation of methods</span>
+<span class="p">}</span>
+
+<span class="c1">//ASubClass.swift</span>
+<span class="kd">class</span> <span class="nc">ASubClass</span> <span class="p">:</span> <span class="n">ABaseClass</span> <span class="p">{</span>
+<span class="p">}</span>
+</pre></div>
+
+
+<p><strong>Objective-C</strong></p>
+<div class="codehilite"><pre><span class="c1">//ABaseClass.h</span>
+<span class="k">@interface</span> <span class="nc">ABaseClass</span> : <span class="bp">NSObject</span>
+<span class="c1">//Declaration of properties</span>
+<span class="c1">//Declaration of methods</span>
+<span class="k">@end</span>
+
+<span class="c1">//ABaseClass.m</span>
+<span class="cp">#import &quot;ABaseClass.h&quot;</span>
+
+<span class="k">@implementation</span> <span class="nc">ABaseClass</span>
+<span class="c1">//Implementation of methods</span>
+<span class="k">@end</span>
+
+<span class="c1">//ASubClass.h</span>
+<span class="cp">#import &quot;ABaseClass.h&quot;</span>
+
+<span class="k">@interface</span> <span class="nc">ASubClass</span> : <span class="nc">ABaseClass</span>
+<span class="p">...</span>
+<span class="k">@end</span>
+</pre></div>
+
+
+<ul>
+<li>Each class in Swift only needs to be written in one file (although you can have multiple classes per file). All Swift classes in a module can 'see' each other automatically</li>
+<li>Each class in Objective-C must be <em>declared</em> in a header file and <em>implemented</em> in a .m file</li>
+<li>Each source file that needs to use another class must import the class' header file</li>
+<li>In many cases you might want to use a <code>struct</code> in Swift instead of a class if you are just representing a value. As value types are copied when you pass them to a function or method, they are great in concurrent scenarios. In Objective-C only C structs are available, however these cannot be stored in structures like <code>NSDictionary</code> or <code>NSArray</code></li>
+</ul>
+<h3 id="properties">Properties</h3>
+<p><strong>Swift</strong></p>
+<div class="codehilite"><pre><span class="kd">class</span> <span class="bp">MyClass</span> <span class="p">{</span>
+    <span class="kd">var</span> <span class="nv">someProperty</span><span class="p">:</span> <span class="nb">Int</span> <span class="p">=</span> <span class="mi">0</span>
+    <span class="c1">//This must be initialized in init()</span>
+    <span class="kd">var</span> <span class="nv">someArray</span><span class="p">:</span> <span class="p">[</span><span class="nb">String</span><span class="p">]</span>
+<span class="p">}</span>
+</pre></div>
+
+
+<p><strong>Objective-C</strong></p>
+<div class="codehilite"><pre><span class="k">@interface</span> <span class="bp">MyClass</span> : <span class="bp">NSObject</span>
+
+<span class="k">@property</span> <span class="kt">int</span> <span class="n">someProperty</span><span class="p">;</span> <span class="c1">//Value must be set in init method</span>
+<span class="k">@property</span> <span class="bp">NSArray</span> <span class="o">*</span> <span class="n">someArray</span><span class="p">;</span>
+
+<span class="k">@end</span>
+</pre></div>
+
+
+<ul>
+<li>All <a href="https://developer.apple.com/library/ios/documentation/Swift/Conceptual/Swift_Programming_Language/TheBasics.html#//apple_ref/doc/uid/TP40014097-CH5-XID_496">non-optional properties</a> in Swift must be initialized in the <code>init()</code> method in Swift</li>
+<li>Properties are declared in the .h in <code>@interface</code> in Objective-C</li>
+<li>To access properties inside a class in Swift you can use <code>someProperty</code> or <code>self.someProperty</code>. In Objective-C you must use <code>self.someProperty</code></li>
+<li>To access properties of an instance outside the class, you can use <code>instance.someProperty</code> in both languages</li>
+</ul>
+<h3 id="instance-methods">Instance methods</h3>
+<h4 id="declaration-and-implementation">Declaration and implementation</h4>
+<p><strong>Swift</strong></p>
+<div class="codehilite"><pre><span class="kd">var</span> <span class="nv">MyClass</span> <span class="p">{</span>
+    <span class="kd">func</span> <span class="nf">noArguments</span><span class="p">()</span> <span class="p">{</span>
+        <span class="p">...</span>
+    <span class="p">}</span>
+
+    <span class="kd">func</span> <span class="nf">lengthOf</span><span class="p">(</span><span class="n">string</span><span class="p">:</span> <span class="nb">String</span><span class="p">)</span> <span class="p">-&gt;</span> <span class="nb">Int</span> <span class="p">{</span>
+        <span class="k">return</span> <span class="n">string</span><span class="p">.</span><span class="n">lengthOfBytesUsingEncoding</span><span class="p">(</span><span class="n">NSUTF8StringEncoding</span><span class="p">)</span>
+    <span class="p">}</span>
+
+    <span class="kd">func</span> <span class="nf">multipleParamters</span><span class="p">(</span><span class="bp">first</span><span class="p">:</span> <span class="nb">String</span><span class="p">,</span> <span class="n">second</span><span class="p">:</span> <span class="n">CGFloat</span><span class="p">)</span> <span class="p">{</span>
+        <span class="p">...</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+
+
+<p><strong>Objective-C</strong></p>
+<div class="codehilite"><pre><span class="c1">//MyClass.h</span>
+<span class="k">@interface</span> <span class="bp">MyClass</span> : <span class="bp">NSObject</span>
+
+<span class="p">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nf">noArguments</span><span class="p">;</span>
+<span class="p">-</span> <span class="p">(</span><span class="n">NSInteger</span><span class="p">)</span><span class="nf">lengthOfString:</span><span class="p">(</span><span class="bp">NSString</span><span class="o">*</span><span class="p">)</span><span class="nv">string</span><span class="p">;</span>
+<span class="p">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nf">multipleParameters:</span><span class="p">(</span><span class="bp">NSString</span><span class="o">*</span><span class="p">)</span><span class="nv">first</span> <span class="nf">second:</span><span class="p">(</span><span class="n">CGFloat</span><span class="p">)</span><span class="nv">second</span><span class="p">;</span>
+
+<span class="k">@end</span>
+
+<span class="c1">//MyClass.m</span>
+<span class="cp">#import &quot;MyClass.h&quot;</span>
+
+<span class="k">@implementation</span> <span class="bp">MyClass</span>
+
+<span class="p">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nf">noArguments</span> <span class="p">{</span>
+    <span class="p">...</span>
+<span class="p">}</span>
+
+<span class="p">-</span> <span class="p">(</span><span class="n">NSInteger</span><span class="p">)</span><span class="nf">lengthOfString:</span><span class="p">(</span><span class="bp">NSString</span><span class="o">*</span><span class="p">)</span><span class="nv">string</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="n">string</span><span class="p">.</span><span class="n">length</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="p">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nf">multipleParameters:</span><span class="p">(</span><span class="bp">NSString</span><span class="o">*</span><span class="p">)</span><span class="nv">first</span> <span class="nf">second:</span><span class="p">(</span><span class="n">CGFloat</span><span class="p">)</span><span class="nv">second</span> <span class="p">{</span>
+    <span class="p">...</span>
+<span class="p">}</span>
+
+<span class="k">@end</span>
+</pre></div>
+
+
+<ul>
+<li>The return type of a method that doesn't return anything in Objective-C is <code>void</code></li>
+<li>All (public) methods of a class must be declared in the class' header file in Objective-C and implemented in the .m file</li>
+<li>All methods begin with <code>func</code> in Swift</li>
+<li>Instance methods are all prefixed with <code>-</code> in Objective-C</li>
+</ul>
+<h4 id="calling-methods">Calling methods</h4>
+<p><strong>Swift</strong></p>
+<div class="codehilite"><pre><span class="kd">class</span> <span class="bp">MyClass</span> <span class="p">{</span>
+    <span class="kd">func</span> <span class="nf">stringEqual</span><span class="p">(</span><span class="n">string</span><span class="p">:</span> <span class="nb">String</span><span class="p">,</span> <span class="bp">toString</span><span class="p">:</span> <span class="nb">String</span><span class="p">)</span> <span class="p">-&gt;</span> <span class="nb">Bool</span> <span class="p">{</span>
+        <span class="k">return</span> <span class="n">string</span> <span class="p">==</span> <span class="bp">toString</span>
+    <span class="p">}</span>
+
+    <span class="kd">func</span> <span class="nf">stringEqualsItself</span><span class="p">(</span><span class="n">string</span><span class="p">:</span> <span class="nb">String</span><span class="p">)</span> <span class="p">{</span>
+        <span class="c1">//These are both the same</span>
+        <span class="n">stringEqual</span><span class="p">(</span><span class="n">string</span><span class="p">,</span> <span class="n">string</span><span class="p">)</span>
+        <span class="kc">self</span><span class="p">.</span><span class="n">stringEqual</span><span class="p">(</span><span class="n">string</span><span class="p">,</span> <span class="n">string</span><span class="p">)</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+
+
+<p><strong>Objective-C</strong></p>
+<div class="codehilite"><pre><span class="k">@interface</span> <span class="bp">MyClass</span> : <span class="bp">NSObject</span>
+
+<span class="p">-</span> <span class="p">(</span><span class="kt">BOOL</span><span class="p">)</span><span class="nf">stringEqual:</span><span class="p">(</span><span class="bp">NSString</span><span class="o">*</span><span class="p">)</span><span class="nv">string</span> <span class="nf">toString:</span><span class="p">(</span><span class="bp">NSString</span><span class="o">*</span><span class="p">)</span><span class="nv">toString</span><span class="p">;</span>
+<span class="p">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nf">stringEqualsItself:</span><span class="p">(</span><span class="bp">NSString</span><span class="o">*</span><span class="p">)</span><span class="nv">string</span><span class="p">;</span>
+
+<span class="k">@end</span>
+
+<span class="k">@implementation</span> <span class="bp">MyClass</span>
+
+<span class="p">-</span> <span class="p">(</span><span class="kt">BOOL</span><span class="p">)</span><span class="nf">stringEqual:</span><span class="p">(</span><span class="bp">NSString</span><span class="o">*</span><span class="p">)</span><span class="nv">string</span> <span class="nf">toString:</span><span class="p">(</span><span class="bp">NSString</span><span class="o">*</span><span class="p">)</span><span class="nv">toString</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="p">[</span><span class="n">string</span> <span class="nl">isEqualToString</span><span class="p">:</span><span class="n">toString</span><span class="p">];</span>
+<span class="p">}</span>
+
+<span class="p">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nf">stringEqualsItself:</span><span class="p">(</span><span class="bp">NSString</span><span class="o">*</span><span class="p">)</span><span class="nv">string</span> <span class="p">{</span>
+    <span class="p">[</span><span class="nb">self</span> <span class="nl">stringEqual</span><span class="p">:</span><span class="n">string</span> <span class="nl">toString</span><span class="p">:</span><span class="n">string</span><span class="p">]</span>
+<span class="p">}</span>
+
+<span class="k">@end</span>
+</pre></div>
+
+
+<ul>
+<li>Methods can be called with <code>instance.methodName(...)</code> in Swift</li>
+<li><code>self</code> can be omitted in Swift</li>
+<li>Methods are called as <code>[self methodName:firstParameter second:secondParameter]</code> in Objective-C</li>
+<li>You can't use dot syntax to call methods with parameters in Objective-C (if, however you have a method like <code>- (NSInteger)doSomeCalculationWithoutParameters</code> you can do <code>instance.doSomeCalculationWithoutParameters</code> however it is generally considered bad practice)</li>
+</ul>
+<h3 id="class-methods">Class methods</h3>
+<p><strong>Swift</strong></p>
+<div class="codehilite"><pre><span class="kd">class</span> <span class="bp">MyClass</span> <span class="p">{</span>
+    <span class="kd">class</span> <span class="nc">func</span> <span class="n">classFunction</span><span class="p">()</span> <span class="p">{</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="c1">//Call as:</span>
+<span class="bp">MyClass</span><span class="p">.</span><span class="n">classFunction</span><span class="p">()</span>
+</pre></div>
+
+
+<p><strong>Objective-C</strong></p>
+<div class="codehilite"><pre><span class="k">@interface</span> <span class="bp">MyClass</span> : <span class="bp">NSObject</span>
+
+<span class="p">+</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nf">classFunction</span><span class="p">;</span>
+
+<span class="k">@end</span>
+
+<span class="c1">//Call as</span>
+<span class="p">[</span><span class="bp">MyClass</span> <span class="n">classFunction</span><span class="p">];</span>
+</pre></div>
+
+
+<ul>
+<li>Class functions are declared as <code>class func</code> in Swift and use <code>+</code> instead of a <code>-</code> in Objective-C</li>
+<li>You can call class functions without parameters using dot-syntax in Objective-C (e.g. <code>MyClass.classFuncion</code>) however this is considered bad practice</li>
+</ul>
+<h3 id="initializers">Initializers</h3>
+<p><strong>Swift</strong></p>
+<div class="codehilite"><pre><span class="kd">class</span> <span class="nc">Person</span> <span class="p">{</span>
+    <span class="kd">var</span> <span class="nv">someProperty</span><span class="p">:</span> <span class="nb">Int</span> <span class="p">=</span> <span class="mi">5</span>
+
+    <span class="kr">override</span> <span class="kd">init</span><span class="p">()</span> <span class="p">{</span>
+        <span class="c1">//This must be called before you initialize the class</span>
+        <span class="kc">super</span><span class="p">.</span><span class="kd">init</span><span class="p">()</span>
+        <span class="c1">//All non-optional properties must be initialized here</span>
+        <span class="p">...</span>
+    <span class="p">}</span>
+
+    <span class="c1">//A secondary init method</span>
+    <span class="kd">init</span><span class="p">(</span><span class="n">withName</span> <span class="n">name</span><span class="p">:</span> <span class="nb">String</span><span class="p">)</span> <span class="p">{</span>
+        <span class="p">...</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+
+
+<p><strong>Objective-C</strong></p>
+<div class="codehilite"><pre><span class="k">@implementation</span> <span class="nc">Person</span>
+
+<span class="c1">//These methods will need to be declared in the header file</span>
+<span class="p">-</span> <span class="p">(</span><span class="kt">instancetype</span><span class="p">)</span><span class="nf">init</span> <span class="p">{</span>
+    <span class="nb">self</span> <span class="o">=</span> <span class="p">[</span><span class="nb">super</span> <span class="n">init</span><span class="p">];</span>
+    <span class="k">if</span> <span class="p">(</span><span class="nb">self</span><span class="p">)</span> <span class="p">{</span>
+        <span class="c1">//Properties must be initialized in init</span>
+        <span class="nb">self</span><span class="p">.</span><span class="n">someProperty</span> <span class="o">=</span> <span class="mi">5</span><span class="p">;</span>
+        <span class="p">...</span>
+    <span class="p">}</span>
+    <span class="k">return</span> <span class="nb">self</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="p">-</span> <span class="p">(</span><span class="kt">instancetype</span><span class="p">)</span><span class="nf">initWithName:</span><span class="p">(</span><span class="bp">NSString</span><span class="o">*</span><span class="p">)</span><span class="nv">name</span> <span class="p">{</span>
+    <span class="nb">self</span> <span class="o">=</span> <span class="p">[</span><span class="nb">super</span> <span class="n">init</span><span class="p">];</span>
+    <span class="k">if</span> <span class="p">(</span><span class="nb">self</span><span class="p">)</span> <span class="p">{</span>
+        <span class="c1">//Do initialization of properties</span>
+    <span class="p">}</span>
+    <span class="k">return</span> <span class="nb">self</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="k">@end</span>
+</pre></div>
+
+
+<ul>
+<li>To override a superclass initializer in Swift you must use the <code>override</code> keyword</li>
+<li>You can set the default values of properties when they are declared in Swift, but you must initialize them in Objective-C</li>
+<li>You can name parameters in both languages. These statements are equivalent:<ul>
+<li>Swift: <code>someFunction(withParameter param: String)</code> is called as <code>instance.someFunction(withParameter: value)</code></li>
+<li>Objective-C: <code>- (void)someFunctionWithParameter:(NSString*)param</code> is called as <code>[instance someFunctionWithParameter:value]</code></li>
+</ul>
+</li>
+<li>The return type of initializers in Objective-C is <code>instancetype</code>. You cannot have a return type in Swift</li>
+<li>In Objective-C:<ul>
+<li>You have to initialize <code>self</code> from the superclass in Objective-C</li>
+<li>Check that it isn't nil (<code>if (self)</code> is the same as <code>if (self != nil)</code> in Objective-C)</li>
+<li>Initialize the properties</li>
+<li>Return <code>self</code></li>
+</ul>
+</li>
+</ul>
+<h3 id="deinitializers">Deinitializers</h3>
+<p><strong>Swift</strong></p>
+<div class="codehilite"><pre><span class="kd">class</span> <span class="bp">MyClass</span> <span class="p">{</span>
+    <span class="kd">deinit</span><span class="p">()</span> <span class="p">{</span>
+        <span class="c1">//Cleanup resources if necessary</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+
+
+<p><strong>Objective-C</strong></p>
+<div class="codehilite"><pre><span class="k">@implementation</span> <span class="bp">MyClass</span>
+
+<span class="p">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nf">dealloc</span> <span class="p">{</span>
+    <span class="c1">//Cleanup resources if necessary</span>
+<span class="p">}</span>
+
+<span class="k">@end</span>
+</pre></div>
+
+
+<ul>
+<li>You can only have one <code>deinit</code> or <code>dealloc</code> method</li>
+<li>You do not need to call the superclass' deinitializer (Automatic Reference Counting does this for you)</li>
+<li>You do not need to call <code>dealloc</code> or <code>deinit</code> on any properties that your class owns (Automatic Reference Counting does this for you)</li>
+</ul>
+<h3 id="instance-declarations">Instance declarations</h3>
+<p><strong>Swift</strong></p>
+<div class="codehilite"><pre><span class="kd">var</span> <span class="nv">object</span> <span class="p">=</span> <span class="bp">MyClass</span><span class="p">()</span>
+<span class="kd">var</span> <span class="nv">person</span> <span class="p">=</span> <span class="n">Person</span><span class="p">(</span><span class="n">withName</span><span class="p">:</span> <span class="s">&quot;Thomas&quot;</span><span class="p">)</span>
+</pre></div>
+
+
+<p><strong>Objective-C</strong></p>
+<div class="codehilite"><pre><span class="bp">MyClass</span> <span class="o">*</span> <span class="n">object</span> <span class="o">=</span> <span class="p">[[</span><span class="bp">MyClass</span> <span class="n">alloc</span><span class="p">]</span> <span class="n">init</span><span class="p">];</span>
+<span class="n">Person</span> <span class="o">*</span> <span class="n">person</span> <span class="o">=</span> <span class="p">[[</span><span class="n">Person</span> <span class="n">alloc</span><span class="p">]</span> <span class="nl">initWithName</span><span class="p">:</span><span class="s">@&quot;Thomas&quot;</span><span class="p">];</span>
+</pre></div>
+
+
+<ul>
+<li>You can use <code>var</code> or <code>let</code> in Swift, but if you use <code>let</code> then you won't be able to reassign the variable later</li>
+<li>In Swift you use <code>ClassName(parameters of initializer)</code> to initialize an instance</li>
+<li>Types are inferred in Swift, but must be defined explicitly in Objective-C</li>
+<li>You have to call the class method <code>alloc</code> before calling the <code>init</code> method in Objective-C. You do not need to define <code>alloc</code> for your class</li>
+</ul>
+<h3 id="protocols">Protocols</h3>
+<p><strong>Swift</strong></p>
+<div class="codehilite"><pre><span class="kd">protocol</span> <span class="nc">MyProtocol</span> <span class="p">{</span>
+    <span class="kd">func</span> <span class="nf">classMustDoThis</span><span class="p">()</span>
+<span class="p">}</span>
+
+<span class="kd">class</span> <span class="bp">MyClass</span><span class="p">:</span> <span class="n">Superclass</span><span class="p">,</span> <span class="n">MyProtocol</span> <span class="p">{</span>
+    <span class="kd">func</span> <span class="nf">classMustDoThis</span><span class="p">()</span> <span class="p">{</span>
+        <span class="p">...</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+
+
+<p><strong>Objective-C</strong></p>
+<div class="codehilite"><pre><span class="k">@protocol</span> <span class="nc">MyProtocol</span><span class="o">&lt;</span><span class="bp">NSObject</span><span class="o">&gt;</span>
+
+<span class="o">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="n">classMustDoThis</span><span class="p">;</span>
+
+<span class="k">@end</span>
+
+<span class="k">@interface</span> <span class="bp">MyClass</span>: <span class="nc">Superclass</span><span class="o">&lt;</span><span class="n">MyProtocol</span><span class="o">&gt;</span>
+<span class="k">@end</span>
+
+<span class="k">@implementation</span> <span class="bp">MyClass</span>
+
+<span class="p">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nf">classMustDoThis</span> <span class="p">{</span>
+    <span class="p">...</span>
+<span class="p">}</span>
+
+<span class="k">@end</span>
+</pre></div>
+
+
+<ul>
+<li>If a class conforms to a protocol then you must list it after the superclass in Swift</li>
+<li>The Swift compiler will fail if you don't implement all of the protocol's methods in your class, however it will only produce a warning in Objective-C</li>
+<li>Protocols are listed in angle brackets after the superclass in Objective-C</li>
+<li>If you have a class that needs to have a property that conforms to a protocol:<ul>
+<li>Swift: <code>var property: MyProtocol</code></li>
+<li>Objective-C: <code>@property id&lt;MyProtocol&gt; property;</code> - you don't need the <code>*</code> because <code>id</code> is not a pointer type</li>
+</ul>
+</li>
+</ul>
+<h3 id="extensions">Extensions</h3>
+<p><strong>Swift</strong></p>
+<div class="codehilite"><pre><span class="kd">extension</span> <span class="bp">UIImage</span> <span class="p">{</span>
+    <span class="kd">func</span> <span class="nf">newMethod</span><span class="p">()</span> <span class="p">{</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+
+
+<p><strong>Objective-C</strong></p>
+<div class="codehilite"><pre><span class="k">@interface</span> <span class="bp">UIImage</span> <span class="nl">(XYZ)</span>
+
+<span class="p">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nf">xyz_newMethod</span><span class="p">;</span>
+
+<span class="k">@end</span>
+
+<span class="k">@implementation</span> <span class="bp">UIImage</span> <span class="nl">(XYZ)</span>
+
+<span class="p">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nf">xyz_newMethod</span> <span class="p">{</span>
+    <span class="p">...</span>
+<span class="p">}</span>
+
+<span class="k">@end</span>
+</pre></div>
+
+
+<ul>
+<li>Extension methods are available to all other Swift classes when defined in Swift</li>
+<li>Extension methods defined in Objective-C are accessible if you import the extension header file (typically named <code>Class+XYZ.h</code>)</li>
+<li>It is encourage to use three letter acronyms for extensions and method names in Objective-C</li>
+<li>You cannot (easily) add properties in extensions</li>
+</ul>
+<h3 id="private-methods-and-properties">Private methods and properties</h3>
+<p><strong>Swift</strong></p>
+<div class="codehilite"><pre><span class="kd">class</span> <span class="bp">MyClass</span> <span class="p">{</span>
+    <span class="kd">private</span> <span class="kd">var</span> <span class="nv">privateProperty</span><span class="p">:</span> <span class="nb">String</span>
+
+    <span class="kd">private</span> <span class="kd">func</span> <span class="nf">privateMethod</span><span class="p">()</span> <span class="p">{</span>
+        <span class="p">...</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+
+
+<p><strong>Objective-C</strong></p>
+<div class="codehilite"><pre><span class="c1">//MyClass.h</span>
+<span class="k">@interface</span> <span class="bp">MyClass</span> : <span class="bp">NSObject</span>
+<span class="c1">//Do not declare private methods and properties in the header file!</span>
+<span class="k">@end</span>
+
+<span class="c1">//MyClass.m</span>
+<span class="cp">#import &quot;MyClass.h&quot;</span>
+
+<span class="k">@interface</span> <span class="bp">MyClass</span> <span class="p">()</span>
+
+<span class="k">@property</span> <span class="bp">NSString</span> <span class="o">*</span> <span class="n">privateProperty</span><span class="p">;</span>
+<span class="p">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nf">privateMethod</span><span class="p">;</span>
+
+<span class="k">@end</span>
+
+<span class="k">@implementation</span> <span class="bp">MyClass</span>
+
+<span class="p">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nf">privateMethod</span> <span class="p">{</span>
+    <span class="p">...</span>
+<span class="p">}</span>
+
+<span class="k">@end</span>
+</pre></div>
+
+
+<ul>
+<li>Private methods and properties are not accessible outside of the class</li>
+<li>There is also the <code>internal</code> keyword in Swift. These are only available in the current module (framework or app). This feature is not available in Objective-C</li>
+<li>Private methods and properties are declared in a private class extension in the implementation file of a class</li>
+</ul>
+<h3 id="interface-builder">Interface Builder</h3>
+<p><strong>Swift</strong></p>
+<div class="codehilite"><pre><span class="kd">class</span> <span class="nc">MyViewController</span><span class="p">:</span> <span class="bp">UIViewController</span> <span class="p">{</span>
+    <span class="kr">@IBOutlet</span> <span class="kr">weak</span> <span class="kd">var</span> <span class="nv">button</span><span class="p">:</span> <span class="bp">UIButton</span><span class="p">!</span>
+
+    <span class="kr">@IBAction</span> <span class="kd">func</span> <span class="nf">buttonTapped</span><span class="p">(</span><span class="n">sender</span><span class="p">:</span> <span class="nb">AnyObject</span><span class="p">)</span> <span class="p">{</span>
+        <span class="p">...</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+
+
+<p><strong>Objective-C</strong></p>
+<div class="codehilite"><pre><span class="c1">//MyViewController.h</span>
+<span class="k">@interface</span> <span class="nc">MyViewController</span>: <span class="bp">UIViewController</span>
+
+<span class="k">@property</span> <span class="p">(</span><span class="k">weak</span><span class="p">,</span> <span class="k">nonatomic</span><span class="p">)</span> <span class="kt">IBOutlet</span> <span class="bp">UIButton</span> <span class="o">*</span> <span class="n">button</span><span class="p">;</span>
+<span class="p">-</span> <span class="p">(</span><span class="kt">IBAction</span><span class="p">)</span><span class="nf">buttonTapped:</span><span class="p">(</span><span class="kt">id</span><span class="p">)</span><span class="nv">sender</span><span class="p">;</span>
+
+<span class="k">@end</span>
+
+<span class="c1">//MyViewController.m</span>
+<span class="cp">#import &quot;MyViewController.h&quot;</span>
+
+<span class="k">@implementation</span> <span class="nc">MyViewController</span>
+
+<span class="p">-</span> <span class="p">(</span><span class="kt">IBAction</span><span class="p">)</span><span class="nf">buttonTapped:</span><span class="p">(</span><span class="kt">id</span><span class="p">)</span><span class="nv">sender</span> <span class="p">{</span>
+    <span class="p">...</span>
+<span class="p">}</span>
+
+<span class="k">@end</span>
+</pre></div>
+
+
+<ul>
+<li>The <code>IBOutlet</code>/<code>@IBOutlet</code> and <code>IBAction</code>/<code>@IBAction</code> attributes declare that a property or method is accessible from Interface Builder</li>
+<li><code>IBOutlet</code>s are weak</li>
+<li><code>IBAction</code> is the same as the <code>void</code> return type in Objective-C</li>
+<li>The sender has type <code>AnyObject</code> or <code>id</code>, however Interface Builder does support picking a specific type (e.g. <code>UIButton</code>)</li>
+</ul>
+<h3 id="getters-and-setters">Getters and setters</h3>
+<p><strong>Swift</strong></p>
+<div class="codehilite"><pre><span class="kd">class</span> <span class="bp">MyClass</span> <span class="p">{</span>
+    <span class="kd">var</span> <span class="nv">temperatureInCelsius</span><span class="p">:</span> <span class="nb">Double</span> <span class="p">=</span> <span class="mi">0</span><span class="p">;</span>
+
+    <span class="kd">var</span> <span class="nv">temperatureInFahrenheit</span><span class="p">:</span> <span class="nb">Double</span> <span class="p">{</span>
+        <span class="kr">get</span> <span class="p">{</span>
+            <span class="k">return</span> <span class="p">(</span><span class="n">temperatureInCelsius</span> <span class="o">*</span> <span class="mf">9.0</span> <span class="o">/</span> <span class="mf">5.0</span><span class="p">)</span> <span class="o">+</span> <span class="mf">32.0</span>
+        <span class="p">}</span>
+        <span class="kr">set</span><span class="p">(</span><span class="n">fahrenheit</span><span class="p">)</span> <span class="p">{</span>
+            <span class="n">temperatureInCelsius</span> <span class="p">=</span> <span class="p">(</span><span class="n">fahrenheit</span> <span class="o">-</span> <span class="mi">32</span><span class="p">)</span> <span class="o">*</span> <span class="mf">5.0</span> <span class="o">/</span> <span class="mf">9.0</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+
+
+<p><strong>Objective-C</strong></p>
+<div class="codehilite"><pre><span class="k">@interface</span> <span class="bp">MyClass</span>: <span class="nc">NSObjet</span>
+
+<span class="k">@property</span> <span class="kt">double</span> <span class="n">temperatureInCelsius</span><span class="p">;</span>
+<span class="k">@property</span> <span class="p">(</span><span class="k">nonatomic</span><span class="p">)</span> <span class="kt">double</span> <span class="n">temperatureInFahrenheit</span><span class="p">;</span>
+
+<span class="k">@end</span>
+
+<span class="k">@implementation</span> <span class="bp">MyClass</span>
+
+<span class="p">-</span> <span class="p">(</span><span class="kt">double</span><span class="p">)</span><span class="nf">temperatureInFahrenheit</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="p">(</span><span class="nb">self</span><span class="p">.</span><span class="n">temperatureInCelsius</span> <span class="o">*</span> <span class="mf">9.0</span> <span class="o">/</span> <span class="mf">5.0</span><span class="p">)</span> <span class="o">+</span> <span class="mf">32.0</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="p">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nf">setTemperatureInFahrenheit:</span><span class="p">(</span><span class="kt">double</span><span class="p">)</span><span class="nv">fahrenheit</span> <span class="p">{</span>
+    <span class="nb">self</span><span class="p">.</span><span class="n">temperatureInCelsius</span> <span class="o">=</span> <span class="p">(</span><span class="n">fahrenheit</span> <span class="o">-</span> <span class="mi">32</span><span class="p">)</span> <span class="o">*</span> <span class="mf">5.0</span> <span class="o">/</span> <span class="mf">9.0</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="k">@end</span>
+</pre></div>
+
+
+<ul>
+<li>To be able to write a custom setter for a property in Objective-C you need to declare it as <code>nonatomic</code></li>
+<li>You don't have to write a getter method if you write a setter method and vice versa</li>
+</ul>
+<h2 id="blocks-and-functional-patterns">Blocks and functional patterns</h2>
+<ul>
+<li>Objective-C block syntax: <a href="http://fuckingblocksyntax.com">http://fuckingblocksyntax.com</a></li>
+<li>Swift closure syntax: <a href="http://fuckingclosuresyntax.com">http://fuckingclosuresyntax.com</a></li>
+</ul>
+<h3 id="no-parameters-no-return-value">No parameters, no return value</h3>
+<p><strong>Swift</strong></p>
+<div class="codehilite"><pre><span class="kd">let</span> <span class="nv">closure</span><span class="p">:</span> <span class="p">()</span> <span class="p">-&gt;</span> <span class="p">()</span> <span class="p">=</span> <span class="p">{</span>
+    <span class="p">...</span>
+<span class="p">}</span>
+<span class="c1">//Call as:</span>
+<span class="n">closure</span><span class="p">()</span>
+</pre></div>
+
+
+<p><strong>Objective-C</strong></p>
+<div class="codehilite"><pre><span class="kt">void</span> <span class="p">(</span><span class="o">^</span><span class="n">block</span><span class="p">)()</span> <span class="o">=</span> <span class="o">^</span><span class="p">(){</span>
+    <span class="p">...</span>
+<span class="p">};</span>
+<span class="c1">//Call as</span>
+<span class="n">block</span><span class="p">();</span>
+</pre></div>
+
+
+<ul>
+<li>In Objective-C closures are called blocks</li>
+<li>In Swift <code>Void -&gt; Void</code> is the same as <code>() -&gt; ()</code></li>
+</ul>
+<h3 id="parameters-and-return-value">Parameters and return value</h3>
+<p><strong>Swift</strong></p>
+<div class="codehilite"><pre><span class="kd">let</span> <span class="nv">discriminantOfQuadratic</span><span class="p">:</span> <span class="p">(</span><span class="nb">Double</span><span class="p">,</span> <span class="nb">Double</span><span class="p">,</span> <span class="nb">Double</span><span class="p">)</span> <span class="p">-&gt;</span> <span class="nb">Double</span> <span class="p">=</span> <span class="p">{</span> <span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">c</span><span class="p">)</span> <span class="k">in</span>
+    <span class="k">return</span> <span class="n">b</span> <span class="o">*</span> <span class="n">b</span> <span class="o">-</span> <span class="mi">4</span> <span class="o">*</span> <span class="n">a</span> <span class="o">*</span> <span class="n">c</span>
+<span class="p">}</span>
+
+<span class="kd">let</span> <span class="nv">quadraticHasRealSolutions</span><span class="p">:</span> <span class="p">(</span><span class="nb">Double</span><span class="p">,</span> <span class="nb">Double</span><span class="p">,</span> <span class="nb">Double</span><span class="p">)</span> <span class="p">-&gt;</span> <span class="nb">Bool</span> <span class="p">=</span> <span class="p">{</span> <span class="n">q</span> <span class="k">in</span>
+    <span class="c1">//Arguments are taken as a tuple</span>
+    <span class="c1">//This is not available in Objective-C</span>
+    <span class="k">return</span> <span class="n">discriminantOfQuadratic</span><span class="p">(</span><span class="n">q</span><span class="p">)</span> <span class="o">&gt;=</span> <span class="mi">0</span>
+<span class="p">}</span>
+</pre></div>
+
+
+<p><strong>Objective-C</strong></p>
+<div class="codehilite"><pre><span class="kt">double</span><span class="p">(</span><span class="o">^</span><span class="n">discriminantOfQuadratic</span><span class="p">)(</span><span class="kt">double</span><span class="p">,</span> <span class="kt">double</span><span class="p">,</span> <span class="kt">double</span><span class="p">)</span> <span class="o">=</span> <span class="o">^</span><span class="kt">double</span><span class="p">(</span><span class="kt">double</span> <span class="n">a</span><span class="p">,</span> <span class="kt">double</span> <span class="n">b</span><span class="p">,</span> <span class="kt">double</span> <span class="n">c</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="n">b</span> <span class="o">*</span> <span class="n">b</span> <span class="o">-</span> <span class="mi">4</span> <span class="o">*</span> <span class="n">a</span> <span class="o">*</span> <span class="n">c</span><span class="p">;</span>
+<span class="p">};</span>
+
+<span class="kt">BOOL</span><span class="p">(</span><span class="o">^</span><span class="n">quadraticHasRealSolutions</span><span class="p">)(</span><span class="kt">double</span><span class="p">,</span> <span class="kt">double</span><span class="p">,</span> <span class="kt">double</span><span class="p">)</span> <span class="o">=</span> <span class="o">^</span><span class="kt">BOOL</span><span class="p">(</span><span class="kt">double</span> <span class="n">a</span><span class="p">,</span> <span class="kt">double</span> <span class="n">b</span><span class="p">,</span> <span class="kt">double</span> <span class="n">c</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="n">discriminantOfQuadratic</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">c</span><span class="p">)</span> <span class="o">&gt;=</span> <span class="mi">0</span><span class="p">;</span>
+<span class="p">};</span>
+</pre></div>
+
+
+<ul>
+<li>In both languages you must use the declare the closure/block with a specific type</li>
+<li>In Swift you should use <code>let</code> when declaring blocks, but <code>var</code> will also work</li>
+<li>Swift allows you to take all of the arguments as a tuple</li>
+<li>In Swift you can omit parameters by writing <code>_</code> instead of their name</li>
+<li>You can access by <code>$index</code> in Swift, however this is generally only useful for small blocks</li>
+</ul>
+<h3 id="typealiastypedef">Typealias/Typedef</h3>
+<p><strong>Swift</strong></p>
+<div class="codehilite"><pre><span class="kd">typealias</span> <span class="n">Int2Int</span> <span class="p">=</span> <span class="nb">Int</span> <span class="p">-&gt;</span> <span class="nb">Int</span>
+<span class="kd">let</span> <span class="nv">square</span><span class="p">:</span> <span class="n">Int2Int</span> <span class="p">=</span> <span class="p">{</span> <span class="nv">$0</span> <span class="o">*</span> <span class="nv">$0</span> <span class="p">}</span>
+</pre></div>
+
+
+<p><strong>Objective-C</strong></p>
+<div class="codehilite"><pre><span class="k">typedef</span> <span class="nf">int</span> <span class="p">(</span><span class="o">^</span><span class="n">Int2Int</span><span class="p">)(</span><span class="kt">int</span><span class="p">);</span>
+<span class="n">Int2Int</span> <span class="n">square</span> <span class="o">=</span> <span class="o">^</span><span class="p">(</span><span class="kt">int</span> <span class="n">a</span><span class="p">){</span>
+    <span class="k">return</span> <span class="n">a</span> <span class="o">*</span> <span class="n">a</span><span class="p">;</span>
+<span class="p">};</span>
+</pre></div>
+
+
+<h3 id="sorting">Sorting</h3>
+<p><strong>Swift</strong></p>
+<div class="codehilite"><pre><span class="kd">let</span> <span class="nv">fellowship</span> <span class="p">=</span> <span class="p">[</span><span class="s">&quot;Gandalf&quot;</span><span class="p">,</span> <span class="s">&quot;Aragon&quot;</span><span class="p">,</span> <span class="s">&quot;Boromir&quot;</span><span class="p">,</span> <span class="s">&quot;Legolas&quot;</span><span class="p">,</span> <span class="s">&quot;Gimli&quot;</span><span class="p">,</span> <span class="s">&quot;Frodo&quot;</span><span class="p">,</span> <span class="s">&quot;Samwise&quot;</span><span class="p">,</span> <span class="s">&quot;Merry&quot;</span><span class="p">,</span> <span class="s">&quot;Pippin&quot;</span><span class="p">]</span>
+<span class="kd">let</span> <span class="nv">sortedFellowship</span> <span class="p">=</span> <span class="bp">sorted</span><span class="p">(</span><span class="n">fellowship</span><span class="p">,</span> <span class="p">{</span> <span class="n">s1</span><span class="p">,</span> <span class="n">s2</span> <span class="k">in</span> <span class="n">s1</span> <span class="o">&lt;</span> <span class="n">s2</span> <span class="p">})</span>
+</pre></div>
+
+
+<p><strong>Objective-C</strong></p>
+<div class="codehilite"><pre><span class="bp">NSArray</span> <span class="o">*</span> <span class="n">fellowship</span> <span class="o">=</span> <span class="l">@[</span><span class="s">@&quot;Gandalf&quot;</span><span class="p">,</span> <span class="s">@&quot;Aragon&quot;</span><span class="p">,</span> <span class="s">@&quot;Boromir&quot;</span><span class="p">,</span> <span class="s">@&quot;Legolas&quot;</span><span class="p">,</span> <span class="s">@&quot;Gimli&quot;</span><span class="p">,</span> <span class="s">@&quot;Frodo&quot;</span><span class="p">,</span> <span class="s">@&quot;Samwise&quot;</span><span class="p">,</span> <span class="s">@&quot;Merry&quot;</span><span class="p">,</span> <span class="s">@&quot;Pippin&quot;</span><span class="l">]</span><span class="p">;</span>
+<span class="bp">NSArray</span> <span class="o">*</span> <span class="n">sortedFellowship</span> <span class="p">[</span><span class="n">fellowship</span> <span class="nl">sortedArrayUsingComparator</span><span class="p">:</span><span class="o">^</span><span class="n">NSComparisonResult</span><span class="p">(</span><span class="kt">id</span> <span class="n">left</span><span class="p">,</span> <span class="kt">id</span> <span class="n">right</span><span class="p">)</span> <span class="p">{</span>
+    <span class="bp">NSString</span> <span class="o">*</span> <span class="n">s1</span> <span class="o">=</span> <span class="n">left</span><span class="p">;</span>
+    <span class="bp">NSString</span> <span class="o">*</span> <span class="n">s2</span> <span class="o">=</span> <span class="n">right</span><span class="p">;</span>
+
+    <span class="c1">//The compare method of NSString returns an NSComparisonResult</span>
+    <span class="k">return</span> <span class="p">[</span><span class="n">left</span> <span class="nl">compare</span><span class="p">:</span><span class="n">right</span><span class="p">];</span>
+<span class="p">}];</span>
+</pre></div>
+
+
+<ul>
+<li>The Swift closure returns a <code>Bool</code> indicating whether or not the items are already in the correct order (e.g. whether the first item comes before the second item)</li>
+<li>The Objective-C block returns an <code>NSComparisonResult</code>. This can have one of three values:<ul>
+<li><code>NSOrderedAscending</code> - the left item comes before the right item. Same as returning <code>true</code> in the Swift closure</li>
+<li><code>NSOrderedSame</code> - the left item and right item are equal. Same as returning <code>true</code> in the Swift closure</li>
+<li><code>NSOrderedDescending</code> - the left item should come after the right after. Same as returning <code>false</code> in the Swift closure</li>
+</ul>
+</li>
+</ul>
+<h2 id="imports-and-project-management">Imports and project management</h2>
+<p>In Swift if you declare a class in one file it will be 'visible' to all other Swift classes in your app or framework automatically, and all non private methods will be accessible. In Objective-C you must import each class' header file with its interface declaration when you want to access its methods.</p>
+<p>You may have a scenario where class A has an instance of class B as a property and class B has an instance of A as a property. To do this you must do forward declarations of the classes:</p>
+<p><strong>ClassA.h</strong></p>
+<div class="codehilite"><pre><span class="c1">//Forward declaration of ClassB</span>
+<span class="k">@class</span> <span class="nc">ClassB</span>;
+
+<span class="k">@interface</span> <span class="nc">ClassA</span>: <span class="bp">NSObject</span>
+
+<span class="k">@property</span> <span class="n">ClassB</span> <span class="o">*</span> <span class="n">bProperty</span><span class="p">;</span>
+
+<span class="k">@end</span>
+</pre></div>
+
+
+<p><strong>ClassA.m</strong></p>
+<div class="codehilite"><pre><span class="cp">#import &quot;ClassA.h&quot;</span>
+<span class="c1">//If you don&#39;t also import class B&#39;s header file you won&#39;t be able to use its methods</span>
+<span class="cp">#import &quot;ClassB.h&quot;</span>
+
+<span class="k">@implementation</span> <span class="nc">ClassA</span>
+<span class="p">...</span>
+<span class="k">@end</span>
+</pre></div>
+
+
+<p><strong>ClassB.h</strong></p>
+<div class="codehilite"><pre><span class="c1">//Forward declaration of ClassA</span>
+<span class="k">@class</span> <span class="nc">ClassA</span>;
+
+<span class="k">@interface</span> <span class="nc">ClassB</span> : <span class="bp">NSObject</span>
+
+<span class="k">@property</span> <span class="n">ClassA</span> <span class="o">*</span> <span class="n">aProperty</span><span class="p">;</span>
+
+<span class="k">@end</span>
+</pre></div>
+
+
+<p><strong>ClassB.m</strong></p>
+<div class="codehilite"><pre><span class="cp">#import &quot;ClassB.h&quot;</span>
+<span class="cp">#import &quot;ClassA.h&quot;</span>
+
+<span class="k">@implementation</span> <span class="nc">ClassB</span>
+<span class="p">...</span>
+<span class="k">@end</span>
+</pre></div>
+
+
+<p>For a full primer on using classes and header files, see <a href="http://blog.teamtreehouse.com/beginners-guide-objective-c-classes-objects">Team Treehouse</a>.</p></article>
+</body>
+</html>
