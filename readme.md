@@ -1,7 +1,5 @@
 Swift has encouraged many developers to consider Cocoa and Cocoa Touch development, but the vast majority of resources are still written in Objective-C. This post summarises many common patterns in both languages to make it easier for developers reading Objective-C code to write Swift code (or vice versa!).
 
-[TOC]
-
 ##Basics
 
 ###Hello, world!
