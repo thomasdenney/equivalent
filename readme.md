@@ -289,8 +289,9 @@ class ASubClass : ABaseClass {
 
 ```swift
 class MyClass {
+    //someProperty is automatically initialized to 0
     var someProperty: Int = 0
-    //This must be initialized in init()
+    //someArray must be initialized in init()
     var someArray: [String]
 }
 ```
