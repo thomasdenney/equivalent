@@ -602,7 +602,7 @@ class MyClass: Superclass, MyProtocol {
 * Protocols are listed in angle brackets after the superclass in Objective-C
 * If you have a class that needs to have a property that conforms to a protocol:
 * Swift: `var property: MyProtocol`
-* Objective-C: `@property id<MyProtocol> property;` - you don't need the `*` because `id` is not a pointer type
+* Objective-C: `@property id<MyProtocol> property;` - you don't need the `*` because `id` is a typecast for `objc_object *` (i.e. it already includes the asterisk for the pointer)
 
 ###Extensions
 
@@ -634,7 +634,7 @@ extension UIImage {
 ```
 
 * Extension methods are available to all other Swift classes when defined in Swift
-* Extension methods defined in Objective-C are accessible if you import the extension header file (typically named `Class+XYZ.h`)
+* Extension methods defined in Objective-C are accessible across your project but you need to import the extension header file (typically named `Class+XYZ.h`) to avoid compiler warnings
 * It is encourage to use three letter acronyms for extensions and method names in Objective-C
 * You cannot (easily) add properties in extensions
 
