@@ -143,6 +143,7 @@ if (somethingIsTrue) {
 ```
 
 * Round brackets are optional in Swift if statements
+* You must put curly brackets `{}` around the body of the if statement in Swift (even if it is only one line). These are optional, but highly recommended, in Objective-C
 
 ###Loops
 
